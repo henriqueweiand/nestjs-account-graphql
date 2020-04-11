@@ -7,6 +7,7 @@ NestJS and GraphQL based project simulating an account service with permission c
 1. Database
 2. Configure `ormconfig.json` file with database data
 3. Install dependencies `yarn install`
+4. Copy `.env.example` to `.env`
 
 #### Setup
 
@@ -56,10 +57,11 @@ mutation {
 ```
 
 **_Changelog project_**
-[x] - Module account
-[x] - Add AuthGuard on routes
-[x] - Add authentication methods
-[ ] - Add exception on login failure
-[ ] - Module Roles
-[ ] - Module Actions
-[ ] - Add Roles & Actions Guards
+
+-   [x] Module account
+-   [x] Add AuthGuard on routes
+-   [x] Add authentication methods
+-   [ ] Add exception on login failure
+-   [ ] Module Roles
+-   [ ] Module Actions
+-   [ ] Add Roles & Actions Guards
