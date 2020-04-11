@@ -32,4 +32,18 @@ export class RolesService {
 
         return this.rolesRepository.save(role);
     }
+
+    async getMany(roles: Roles[]): Promise<Roles[]> {
+        const rolesId = roles.map(role => {
+            return role.id;
+        });
+
+        return await this.rolesRepository.find({
+            where: {
+                id: {
+                    $in: rolesId,
+                },
+            },
+        });
+    }
 }

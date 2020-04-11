@@ -8,14 +8,19 @@ import {
 } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 
+import { Account } from './account.entity';
 import { AccountType } from './types/account.type';
 import { AccountService } from './account.service';
 import { CreateAccountInput } from './inputs/create-account.input';
 import { GraphQLAuthGuard } from '../auth/jwt.guard';
+import { RolesService } from '../roles/roles.service';
 
 @Resolver(of => AccountType)
 export class AccountResolver {
-    constructor(private accountService: AccountService) {}
+    constructor(
+        private accountService: AccountService,
+        private rolesService: RolesService,
+    ) {}
 
     @UseGuards(GraphQLAuthGuard)
     @Query(returns => AccountType)
@@ -38,7 +43,10 @@ export class AccountResolver {
 
     @ResolveField()
     async roles(@Parent() account: Account) {
-        console.log(account);
-        return [];
+        if (!account || !account.roles.length) {
+            return [];
+        }
+
+        return account.roles;
     }
 }

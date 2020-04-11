@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Account } from './account.entity';
 import { CreateAccountInput } from './inputs/create-account.input';
+import { Roles } from '../roles/roles.entity';
 
 @Injectable()
 export class AccountService {
@@ -13,7 +14,7 @@ export class AccountService {
     ) {}
 
     async getAccounts(): Promise<Account[]> {
-        return this.accountRepository.find();
+        return this.accountRepository.find({ relations: ['roles'] });
     }
 
     async getAccount(id: string): Promise<Account> {
@@ -42,6 +43,10 @@ export class AccountService {
             email,
             password,
         });
+
+        if (roles && roles.length) {
+            account.roles = roles.map(role => ({ id: role } as Roles));
+        }
 
         return this.accountRepository.save(account);
     }

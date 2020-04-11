@@ -20,7 +20,7 @@ export class CreateAccountInput {
     @Field()
     password: string;
 
-    // @IsUUID('4', { each: true })
+    @IsUUID('4', { each: true })
     @Field(() => [ID], { defaultValue: [] })
-    roles: string[];
+    roles?: string[];
 }
