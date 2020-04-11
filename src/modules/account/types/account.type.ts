@@ -16,5 +16,5 @@ export class AccountType {
     email: string;
 
     @Field(type => [ID], { defaultValue: [] })
-    roles?: string[];
+    roles: string[];
 }

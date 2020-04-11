@@ -29,7 +29,7 @@ export class Account extends BaseEntity {
     @Column()
     password: string;
 
-    @ManyToMany(type => Roles)
+    @ManyToMany(type => Roles, { cascade: true })
     @JoinTable()
     roles: Roles[];
 
