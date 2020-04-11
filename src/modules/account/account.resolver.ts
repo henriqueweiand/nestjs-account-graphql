@@ -1,9 +1,8 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 
-import { AccountType } from './account.type';
+import { AccountType } from './types/account.type';
 import { AccountService } from './account.service';
-import { CreateAccountInput, LoginAccountInput } from './inputs';
-import { UnauthorizedException } from '@nestjs/common';
+import { CreateAccountInput } from './inputs/create-account.input';
 
 @Resolver(of => AccountType)
 export class AccountResolver {
@@ -24,12 +23,5 @@ export class AccountResolver {
         @Args('createAccountInput') createAccountInput: CreateAccountInput,
     ) {
         return this.accountService.createAccount(createAccountInput);
-    }
-
-    @Mutation(returns => AccountType)
-    loginAccount(
-        @Args('loginAccountInput') loginAccountInput: LoginAccountInput,
-    ) {
-        return this.accountService.loginAccount(loginAccountInput);
     }
 }

@@ -1,15 +1,18 @@
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
-import { AccountModule } from './account/account.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { AccountModule } from './modules/account/account.module';
+import { AuthModule } from './modules/auth/auth.module';
+
 @Module({
-  imports: [
-    TypeOrmModule.forRoot(),
-    GraphQLModule.forRoot({
-      autoSchemaFile: true,
-    }),
-    AccountModule,
-  ],
+    imports: [
+        TypeOrmModule.forRoot(),
+        GraphQLModule.forRoot({
+            autoSchemaFile: true,
+        }),
+        AccountModule,
+        AuthModule,
+    ],
 })
 export class AppModule {}
