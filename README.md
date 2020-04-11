@@ -65,3 +65,4 @@ mutation {
 -   [ ] Module Roles
 -   [ ] Module Actions
 -   [ ] Add Roles & Actions Guards
+-   [ ] Tests for all features
