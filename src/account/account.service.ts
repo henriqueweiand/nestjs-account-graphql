@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Account } from './account.entity';
-import { CreateAccountInput } from './account.input';
+import { CreateAccountInput, LoginAccountInput } from './inputs';
 
 @Injectable()
 export class AccountService {
@@ -20,13 +20,34 @@ export class AccountService {
         return this.accountRepository.findOne({ id });
     }
 
+    public async getByEmail(email: string): Promise<Account> {
+        return await this.accountRepository.findOne({ email: email });
+    }
+
+    async loginAccount(
+        loginAccountInput: LoginAccountInput,
+    ): Promise<Account | boolean> {
+        const { email, password } = loginAccountInput;
+        const account = await this.accountRepository.findOne({
+            email,
+        });
+
+        if (account && (await account.comparePassword(password))) {
+            return account;
+        }
+
+        return false;
+    }
+
     async createAccount(
         createAccountInput: CreateAccountInput,
     ): Promise<Account> {
-        const { firstName, lastName } = createAccountInput;
+        const { firstName, lastName, email, password } = createAccountInput;
         const account = await this.accountRepository.create({
             firstName,
             lastName,
+            email,
+            password,
         });
 
         return this.accountRepository.save(account);
