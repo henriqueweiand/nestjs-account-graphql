@@ -21,7 +21,11 @@ export class AccountService {
     }
 
     public async getByEmail(email: string): Promise<Account> {
-        return await this.accountRepository.findOne({ email: email });
+        return await this.accountRepository.findOne({ email });
+    }
+
+    public async getById(id: string): Promise<Account> {
+        return await this.accountRepository.findOne({ id });
     }
 
     async createAccount(

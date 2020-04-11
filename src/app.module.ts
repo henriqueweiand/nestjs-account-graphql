@@ -10,9 +10,11 @@ import { AuthModule } from './modules/auth/auth.module';
         TypeOrmModule.forRoot(),
         GraphQLModule.forRoot({
             autoSchemaFile: true,
+            context: ({ req }) => ({ req }),
         }),
         AccountModule,
         AuthModule,
     ],
+    providers: [],
 })
 export class AppModule {}
