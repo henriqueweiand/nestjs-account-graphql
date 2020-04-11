@@ -1,8 +1,19 @@
-import { Entity, Column, PrimaryGeneratedColumn, BeforeInsert } from 'typeorm';
+import {
+    Entity,
+    Column,
+    PrimaryGeneratedColumn,
+    BeforeInsert,
+    Unique,
+    BaseEntity,
+    ManyToMany,
+    JoinTable,
+} from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { Roles } from '../roles/roles.entity';
 
 @Entity()
-export class Account {
+@Unique(['email'])
+export class Account extends BaseEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
@@ -17,6 +28,10 @@ export class Account {
 
     @Column()
     password: string;
+
+    @ManyToMany(type => Roles)
+    @JoinTable()
+    roles: Roles[];
 
     @BeforeInsert()
     async hashPassword() {

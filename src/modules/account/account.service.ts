@@ -28,10 +28,14 @@ export class AccountService {
         return await this.accountRepository.findOne({ id });
     }
 
-    async createAccount(
-        createAccountInput: CreateAccountInput,
-    ): Promise<Account> {
-        const { firstName, lastName, email, password } = createAccountInput;
+    async create(createAccountInput: CreateAccountInput): Promise<Account> {
+        const {
+            firstName,
+            lastName,
+            email,
+            password,
+            roles,
+        } = createAccountInput;
         const account = await this.accountRepository.create({
             firstName,
             lastName,
