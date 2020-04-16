@@ -2,6 +2,8 @@
 
 NestJS and GraphQL based project simulating an account service with permission control
 
+[![Watch the video](https://i.imgur.com/h1l8t49.png)](https://www.youtube.com/embed/DVKJ5EVNfXY)
+
 #### Requirements
 
 1. Database
