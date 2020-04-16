@@ -35,18 +35,17 @@ export class AccountResolver {
     }
 
     @Mutation(returns => AccountType)
-    createAccount(
+    async createAccount(
         @Args('createAccountInput') createAccountInput: CreateAccountInput,
     ) {
-        return this.accountService.create(createAccountInput);
-    }
+        const { roles, ...accountData } = createAccountInput;
+        const account = await this.accountService.create(accountData);
 
-    @ResolveField()
-    async roles(@Parent() account: Account) {
-        if (!account || !account.roles.length) {
-            return [];
+        if (roles) {
+            const assignIn = await this.rolesService.getMany(roles);
+            this.accountService.assign(account, assignIn);
         }
 
-        return account.roles;
+        return account;
     }
 }

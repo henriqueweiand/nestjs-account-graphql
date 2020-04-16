@@ -29,25 +29,28 @@ export class AccountService {
         return await this.accountRepository.findOne({ id });
     }
 
-    async create(createAccountInput: CreateAccountInput): Promise<Account> {
-        const {
-            firstName,
-            lastName,
-            email,
-            password,
-            roles,
-        } = createAccountInput;
-        const account = await this.accountRepository.create({
+    async create(
+        createAccountInput: Omit<CreateAccountInput, 'roles'>,
+    ): Promise<Account> {
+        const { firstName, lastName, email, password } = createAccountInput;
+        const account = this.accountRepository.create({
             firstName,
             lastName,
             email,
             password,
         });
 
-        if (roles && roles.length) {
-            account.roles = roles.map(role => ({ id: role } as Roles));
-        }
+        return await this.accountRepository.save(account);
+    }
 
-        return this.accountRepository.save(account);
+    async assign(account: Account, roles: Roles[]): Promise<boolean> {
+        try {
+            account.roles = Promise.resolve(roles);
+            await this.accountRepository.save(account);
+
+            return true;
+        } catch (e) {
+            return false;
+        }
     }
 }

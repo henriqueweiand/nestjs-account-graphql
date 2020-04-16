@@ -61,8 +61,8 @@ mutation {
 -   [x] Module account
 -   [x] Add AuthGuard on routes
 -   [x] Add authentication methods
+-   [x] Module Roles
+-   [x] Module Actions
 -   [ ] Add exception on login failure
--   [ ] Module Roles
--   [ ] Module Actions
 -   [ ] Add Roles & Actions Guards
 -   [ ] Tests for all features

@@ -1,10 +1,18 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import {
+    Resolver,
+    Query,
+    Mutation,
+    Args,
+    ResolveField,
+    Parent,
+} from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 
 import { RolesType } from './types/roles.type';
 import { RolesService } from './roles.service';
 import { CreateRolesInput } from './inputs/create-roles.input';
 import { GraphQLAuthGuard } from '../auth/jwt.guard';
+import { Roles } from './roles.entity';
 
 @Resolver(of => RolesType)
 export class RolesResolver {
@@ -26,4 +34,9 @@ export class RolesResolver {
     createRoles(@Args('createRolesInput') createRolesInput: CreateRolesInput) {
         return this.rolesService.create(createRolesInput);
     }
+
+    // @ResolveField()
+    // async actions(@Parent() roles: Roles) {
+    //     console.log(roles.actions);
+    // }
 }

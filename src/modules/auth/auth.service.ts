@@ -5,7 +5,7 @@ import * as jwt from 'jsonwebtoken';
 
 import { Account } from '../account/account.entity';
 import { LoginInput } from './inputs/login.input';
-import { LoginType } from './types/login';
+import { LoginType } from './types/login.type';
 import { JwtPayload } from './interface/token.interface';
 import { AccountService } from '../account/account.service';
 

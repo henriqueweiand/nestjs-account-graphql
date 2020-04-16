@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 
 import { Roles } from './roles.entity';
 import { CreateRolesInput } from './inputs/create-roles.input';
@@ -26,24 +26,16 @@ export class RolesService {
 
     async create(createRolesInput: CreateRolesInput): Promise<Roles> {
         const { name } = createRolesInput;
-        const role = await this.rolesRepository.create({
+        const role = this.rolesRepository.create({
             name,
         });
 
-        return this.rolesRepository.save(role);
+        return await this.rolesRepository.save(role);
     }
 
-    async getMany(roles: Roles[]): Promise<Roles[]> {
-        const rolesId = roles.map(role => {
-            return role.id;
-        });
-
+    async getMany(roles: string[]): Promise<Roles[]> {
         return await this.rolesRepository.find({
-            where: {
-                id: {
-                    $in: rolesId,
-                },
-            },
+            id: In(roles),
         });
     }
 }

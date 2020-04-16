@@ -29,9 +29,9 @@ export class Account extends BaseEntity {
     @Column()
     password: string;
 
-    @ManyToMany(type => Roles, { cascade: true })
-    @JoinTable()
-    roles: Roles[];
+    @ManyToMany(type => Roles, { cascade: true, nullable: true })
+    @JoinTable({ name: 'account_roles ' })
+    roles: Promise<Roles[]>;
 
     @BeforeInsert()
     async hashPassword() {

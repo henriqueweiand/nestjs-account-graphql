@@ -22,5 +22,5 @@ export class CreateAccountInput {
 
     @IsUUID('4', { each: true })
     @Field(() => [ID], { defaultValue: [] })
-    roles?: string[];
+    roles: string[];
 }
