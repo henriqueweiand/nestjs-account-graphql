@@ -14,4 +14,13 @@ export class Actions extends BaseEntity {
 
     @Column()
     name: string;
+
+    @Column({ nullable: true })
+    url: string;
+
+    @Column({ nullable: true })
+    method: string;
+
+    @Column({ nullable: true })
+    description: string;
 }

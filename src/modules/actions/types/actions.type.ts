@@ -6,5 +6,11 @@ export class ActionsType {
     id: string;
 
     @Field()
-    name: string;
+    url: string;
+
+    @Field()
+    method: string;
+
+    @Field()
+    description: string;
 }

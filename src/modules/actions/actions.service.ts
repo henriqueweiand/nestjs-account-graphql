@@ -31,9 +31,12 @@ export class ActionsService {
     }
 
     async create(actionsInput: ActionsInput): Promise<Actions> {
-        const { name } = actionsInput;
+        const { name, url, method, description } = actionsInput;
         const role = this.actionsRepository.create({
             name,
+            url,
+            method,
+            description,
         });
 
         return await this.actionsRepository.save(role);

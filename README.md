@@ -32,6 +32,5 @@ NestJS and GraphQL based project simulating an account service with permission c
 -   [x] Add authentication methods
 -   [x] Module Roles
 -   [x] Module Actions
--   [ ] Add exception on login failure
--   [ ] Add Roles & Actions Guards
+-   [ ] Add exceptions
 -   [ ] Tests for all features
