@@ -7,6 +7,7 @@ import {
     BaseEntity,
     ManyToMany,
     JoinTable,
+    BeforeUpdate,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Roles } from '../roles/roles.entity';
@@ -34,8 +35,11 @@ export class Account extends BaseEntity {
     roles: Promise<Roles[]>;
 
     @BeforeInsert()
+    @BeforeUpdate()
     async hashPassword() {
-        this.password = await bcrypt.hash(this.password, 10);
+        if (this.password) {
+            this.password = await bcrypt.hash(this.password, 10);
+        }
     }
 
     async comparePassword(attempt: string): Promise<boolean> {

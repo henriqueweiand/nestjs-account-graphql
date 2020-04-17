@@ -1,42 +1,69 @@
-import {
-    Resolver,
-    Query,
-    Mutation,
-    Args,
-    ResolveField,
-    Parent,
-} from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 
 import { RolesType } from './types/roles.type';
 import { RolesService } from './roles.service';
-import { CreateRolesInput } from './inputs/create-roles.input';
+import { RolesInput } from './inputs/roles.input';
 import { GraphQLAuthGuard } from '../auth/jwt.guard';
-import { Roles } from './roles.entity';
+import { ActionsService } from '../actions/actions.service';
 
-@Resolver(of => RolesType)
+@Resolver(() => RolesType)
 export class RolesResolver {
-    constructor(private rolesService: RolesService) {}
+    constructor(
+        private rolesService: RolesService,
+        private actionsService: ActionsService,
+    ) {}
 
     @UseGuards(GraphQLAuthGuard)
-    @Query(returns => RolesType)
+    @Query(() => RolesType)
     role(@Args('id') id: string) {
         return this.rolesService.getRole(id);
     }
 
     @UseGuards(GraphQLAuthGuard)
-    @Query(returns => [RolesType])
+    @Query(() => [RolesType])
     roles() {
         return this.rolesService.getRoles();
     }
 
-    @Mutation(returns => RolesType)
-    createRoles(@Args('createRolesInput') createRolesInput: CreateRolesInput) {
-        return this.rolesService.create(createRolesInput);
+    @UseGuards(GraphQLAuthGuard)
+    @Mutation(() => RolesType)
+    async createRole(@Args('rolesInput') rolesInput: RolesInput) {
+        const { actions, ...roleData } = rolesInput;
+        const role = await this.rolesService.create(roleData);
+
+        if (actions.length) {
+            const assignIn = await this.actionsService.getMany(actions);
+            this.rolesService.assign(role, assignIn);
+        }
+
+        return role;
     }
 
-    // @ResolveField()
-    // async actions(@Parent() roles: Roles) {
-    //     console.log(roles.actions);
-    // }
+    @UseGuards(GraphQLAuthGuard)
+    @Mutation(() => RolesType)
+    async updateRole(
+        @Args('id') id: string,
+        @Args('rolesInput') rolesInput: RolesInput,
+    ) {
+        const { actions, ...roleData } = rolesInput;
+        const role = await this.rolesService.getById(id);
+        await this.rolesService.update(role, roleData);
+
+        if (actions.length) {
+            const assignIn = await this.actionsService.getMany(actions);
+            this.rolesService.assign(role, assignIn);
+        }
+
+        return role;
+    }
+
+    @UseGuards(GraphQLAuthGuard)
+    @Mutation(() => RolesType)
+    async deleteRole(@Args('id') id: string) {
+        const role = await this.rolesService.getById(id);
+        await this.rolesService.delete(role);
+
+        return role;
+    }
 }

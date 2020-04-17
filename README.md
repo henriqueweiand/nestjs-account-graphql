@@ -15,41 +15,8 @@ NestJS and GraphQL based project simulating an account service with permission c
 
 1. Run project `yarn start:dev`
 2. Access `http://localhost:3000/graphql`
-3. Create a account, example command:
-
-```js
-mutation {
-  createAccount(
-    createAccountInput: {
-     	firstName: "Henrique",
-    	lastName: "Weiand",
-      email: "henriqueweiand@gmail.com",
-      password: "123456"
-    }
-  ) {
-    firstName,
-    lastName,
-    id
-  }
-}
-```
-
-4. Access login route, with command:
-
-```js
-mutation {
-  login(
-    loginInput: {
-      email: "henriqueweiand@gmail.com",
-      password: "123456"
-    }
-  ) {
-    expiresIn,
-    accessToken
-  }
-}
-```
-
+3. Create a account
+4. Access login route
 5. Set header token for use other routes
 
 ```js

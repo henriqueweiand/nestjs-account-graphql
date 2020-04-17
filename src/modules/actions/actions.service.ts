@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In } from 'typeorm';
 
 import { Actions } from './actions.entity';
-import { CreateActionsInput } from './inputs/create-actions.input';
+import { ActionsInput } from './inputs/actions.input';
 
 @Injectable()
 export class ActionsService {
@@ -24,8 +24,14 @@ export class ActionsService {
         return await this.actionsRepository.findOne({ id });
     }
 
-    async create(createActionsInput: CreateActionsInput): Promise<Actions> {
-        const { name } = createActionsInput;
+    async getMany(actions: string[]): Promise<Actions[]> {
+        return await this.actionsRepository.find({
+            id: In(actions),
+        });
+    }
+
+    async create(actionsInput: ActionsInput): Promise<Actions> {
+        const { name } = actionsInput;
         const role = this.actionsRepository.create({
             name,
         });
@@ -33,9 +39,18 @@ export class ActionsService {
         return await this.actionsRepository.save(role);
     }
 
-    async getMany(actions: string[]): Promise<Actions[]> {
-        return await this.actionsRepository.find({
-            id: In(actions),
-        });
+    async update(
+        action: Actions,
+        actionsInput: ActionsInput,
+    ): Promise<Actions> {
+        const actionUpdate = this.actionsRepository.merge(action, actionsInput);
+
+        return await this.actionsRepository.save(actionUpdate);
+    }
+
+    async delete(action: Actions): Promise<boolean> {
+        await this.actionsRepository.delete(action);
+
+        return true;
     }
 }

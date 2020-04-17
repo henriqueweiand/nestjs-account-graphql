@@ -1,21 +1,15 @@
-import {
-    Resolver,
-    Query,
-    Mutation,
-    Args,
-    ResolveField,
-    Parent,
-} from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 
-import { Account } from './account.entity';
 import { AccountType } from './types/account.type';
-import { AccountService } from './account.service';
-import { CreateAccountInput } from './inputs/create-account.input';
 import { GraphQLAuthGuard } from '../auth/jwt.guard';
 import { RolesService } from '../roles/roles.service';
+import { AccountService } from './account.service';
 
-@Resolver(of => AccountType)
+import { CreateAccountInput } from './inputs/create-account.input';
+import { UpdateAccountInput } from './inputs/update-account.input';
+
+@Resolver(() => AccountType)
 export class AccountResolver {
     constructor(
         private accountService: AccountService,
@@ -23,25 +17,43 @@ export class AccountResolver {
     ) {}
 
     @UseGuards(GraphQLAuthGuard)
-    @Query(returns => AccountType)
+    @Query(() => AccountType)
     account(@Args('id') id: string) {
         return this.accountService.getAccount(id);
     }
 
     @UseGuards(GraphQLAuthGuard)
-    @Query(returns => [AccountType])
+    @Query(() => [AccountType])
     accounts() {
         return this.accountService.getAccounts();
     }
 
-    @Mutation(returns => AccountType)
+    @Mutation(() => AccountType)
     async createAccount(
         @Args('createAccountInput') createAccountInput: CreateAccountInput,
     ) {
         const { roles, ...accountData } = createAccountInput;
         const account = await this.accountService.create(accountData);
 
-        if (roles) {
+        if (roles.length) {
+            const assignIn = await this.rolesService.getMany(roles);
+            this.accountService.assign(account, assignIn);
+        }
+
+        return account;
+    }
+
+    @UseGuards(GraphQLAuthGuard)
+    @Mutation(() => AccountType)
+    async updateAccount(
+        @Args('id') id: string,
+        @Args('updateAccountInput') updateAccountInput: UpdateAccountInput,
+    ) {
+        const { roles, ...accountData } = updateAccountInput;
+        const account = await this.accountService.getAccount(id);
+        await this.accountService.update(account, accountData);
+
+        if (roles.length) {
             const assignIn = await this.rolesService.getMany(roles);
             this.accountService.assign(account, assignIn);
         }

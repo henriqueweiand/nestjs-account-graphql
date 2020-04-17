@@ -3,8 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Account } from './account.entity';
-import { CreateAccountInput } from './inputs/create-account.input';
 import { Roles } from '../roles/roles.entity';
+
+import { CreateAccountInput } from './inputs/create-account.input';
+import { UpdateAccountInput } from './inputs/update-account.input';
 
 @Injectable()
 export class AccountService {
@@ -41,6 +43,24 @@ export class AccountService {
         });
 
         return await this.accountRepository.save(account);
+    }
+
+    async update(
+        account: Account,
+        updateAccountInput: Omit<UpdateAccountInput, 'roles'>,
+    ): Promise<Account> {
+        const accountUpdate = this.accountRepository.merge(
+            account,
+            updateAccountInput,
+        );
+
+        return await this.accountRepository.save(accountUpdate);
+    }
+
+    async delete(account: Account): Promise<boolean> {
+        await this.accountRepository.delete(account);
+
+        return true;
     }
 
     async assign(account: Account, roles: Roles[]): Promise<boolean> {
