@@ -10,11 +10,11 @@ NestJS and GraphQL based project simulating an account service with permission c
 
 ### Features
 
-✅ CRUD Account with relations roles
-✅ CRUD Roles with relations actions
-✅ CRUD Actions
-✅ Login ➡ generate JWT
-✅ JWT Guard
+-   ✅ CRUD Account with relations roles
+-   ✅ CRUD Roles with relations actions
+-   ✅ CRUD Actions
+-   ✅ Login ➡ generate JWT
+-   ✅ JWT Guard
 
 #### Requirements
 
